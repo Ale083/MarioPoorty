@@ -2,19 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Servidor;
+package Cliente;
 
-/*
-* @author Alejandro Umaña y Luis Diego Rodriguez
-*/
-public class PantallaServidor extends javax.swing.JFrame {
-	Servidor servidor;
+import javax.swing.JTextArea;
+
+/**
+ *
+ * @author Proyecto Diseño
+ */
+public class PantallaCliente extends javax.swing.JFrame {
+
+	Cliente cliente;
 	/**
-	 * Creates new form PantallaServidor
+	 * Creates new form PantallaCliente
 	 */
-	public PantallaServidor() {
+	public PantallaCliente() {
 		initComponents();
-		servidor=new Servidor(this);
+		cliente = new Cliente(this);
 	}
 
 	/**
@@ -27,40 +31,35 @@ public class PantallaServidor extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        txaServidor = new javax.swing.JTextArea();
+        txaCliente = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        txaServidor.setColumns(20);
-        txaServidor.setRows(5);
-        jScrollPane1.setViewportView(txaServidor);
+        txaCliente.setColumns(20);
+        txaCliente.setRows(5);
+        jScrollPane1.setViewportView(txaCliente);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-	
-	
-	public void write(String text){
-        this.txaServidor.append(text + "\n");
-    }
-	
-	
+
+	/**
+	 * @param args the command line arguments
+	 */
 	public static void main(String args[]) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -75,28 +74,30 @@ public class PantallaServidor extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(PantallaServidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(PantallaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(PantallaServidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(PantallaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(PantallaServidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(PantallaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(PantallaServidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(PantallaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		//</editor-fold>
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				PantallaServidor pantalla = new PantallaServidor();
-				pantalla.setVisible(true);
-				pantalla.servidor.run();
+				new PantallaCliente().setVisible(true);
 			}
 		});
 	}
 
+	public JTextArea getTxaCliente() {
+		return txaCliente;
+	}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea txaServidor;
+    private javax.swing.JTextArea txaCliente;
     // End of variables declaration//GEN-END:variables
 }
