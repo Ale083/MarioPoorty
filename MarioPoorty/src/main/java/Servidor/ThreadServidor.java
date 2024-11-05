@@ -146,11 +146,11 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 	}
 
 	private void pasarAEnemigosMovimientos() throws Exception{ //señal 1
-		int casillasAvanzar = entradaDatos.readInt();
+		int casillaEspecifica = entradaDatos.readInt();
 		int turnoDePersonajeQueMueve = entradaDatos.readInt();
 		for (ThreadServidor contrincante : contrincantes) {
 			contrincante.salidaDatos.writeInt(2);
-			contrincante.salidaDatos.writeInt(casillasAvanzar);
+			contrincante.salidaDatos.writeInt(casillaEspecifica);
 			contrincante.salidaDatos.writeInt(turnoDePersonajeQueMueve);
 		}
 	}

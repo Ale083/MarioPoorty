@@ -167,20 +167,20 @@ public class ThreadCliente extends Thread{
 	
 	private void moverParaLosDemas() throws Exception{ //TODO: quitar actualizarJuego
 		salidaDatos.writeInt(1);
-		salidaDatos.writeInt(juego.getCasillasAvanzar());
-		salidaDatos.writeInt(juego.getTurnoDelCliente());
+		salidaDatos.writeInt(juego.getPersonaJugando().getNumDeCasilla());
+		salidaDatos.writeInt(juego.getTurnoDelCliente());	
 		
 	}
 	
 	private void moverContrincante() throws Exception{
-		int casillasAvanzar = entradaDatos.readInt();
+		int casillaEspecifica = entradaDatos.readInt();
 		int turnoDePersonajeQueMueve = entradaDatos.readInt();
-		juego.moverContrincante(casillasAvanzar, turnoDePersonajeQueMueve);
+		juego.moverContrincante(casillaEspecifica, turnoDePersonajeQueMueve);
 	}
 	
 	private void enemigoRepite() throws Exception{
 		int repetirTurno = entradaDatos.readInt();
-		while(juego.getPersonajeQueJuega() == repetirTurno){
+		while(juego.getPersonajeQueJuega() != repetirTurno){
 			juego.siguienteRonda();
 		}
 		System.out.println("ESTO DEBERIA SIEMPRE IMRPIMIR FALSE" + juego.isRepetirTurno());
@@ -188,7 +188,7 @@ public class ThreadCliente extends Thread{
 	}
 	
 	private void ponerMiTurnoDeNuevo(int repetirTurno) throws Exception{
-		while(juego.getPersonajeQueJuega() == repetirTurno){
+		while(juego.getPersonajeQueJuega() != repetirTurno){
 			juego.siguienteRonda();
 		}
 	}

@@ -242,21 +242,21 @@ public class Juego extends javax.swing.JFrame {
 		num1 = Random.randomInt(1, 6);
 		num2 = Random.randomInt(1, 6);
 		
-//		if(num1 == 6 && num2 == 6){
-//			personaJugando.sumarTurnosPerdidos(2);
-//			casillasAvanzar = 0;
-//			txfResultadoDados.setText("P" + personaJugando.getTurnosPerdidos());
-//			siguienteRonda();
-//			return;
-//		}
-//		
-//		if(num1 == 6 || num2 == 6){
-//			personaJugando.sumarTurnosPerdidos(1);
-//			casillasAvanzar = 0;
-//			txfResultadoDados.setText("P" + personaJugando.getTurnosPerdidos());
-//			siguienteRonda();
-//			return;
-//		}
+		if(num1 == 6 && num2 == 6){
+			personaJugando.sumarTurnosPerdidos(2);
+			casillasAvanzar = 0;
+			txfResultadoDados.setText("P" + personaJugando.getTurnosPerdidos());
+			siguienteRonda();
+			return;
+		}
+		
+		if(num1 == 6 || num2 == 6){
+			personaJugando.sumarTurnosPerdidos(1);
+			casillasAvanzar = 0;
+			txfResultadoDados.setText("P" + personaJugando.getTurnosPerdidos());
+			siguienteRonda();
+			return;
+		}
 		
 		//else
 		casillasAvanzar = num1+num2;
@@ -299,7 +299,6 @@ public class Juego extends javax.swing.JFrame {
 	}
 	
 	private void moverEnGUI(Personaje personaJugando){
-		System.out.println(casillasGUI[0]);
 		Point coords = casillasGUI[personaJugando.getNumDeCasilla()].getLocation();
 		for (int i = 0; i < personajes.size(); i++) {
 			if(personajes.get(i) == personaJugando){
@@ -315,6 +314,7 @@ public class Juego extends javax.swing.JFrame {
 	
 	private void jugarCasilla(Personaje personaJugando){
 		TipoCasilla eventoDeCasilla = tablero.get(personaJugando.getNumDeCasilla());
+		System.out.println(eventoDeCasilla.name());
 		switch(eventoDeCasilla){
 			case TipoCasilla.HIELO:
 				casillaHielo = true;
@@ -367,15 +367,13 @@ public class Juego extends javax.swing.JFrame {
 		return 0;
 	}
 	
-	public void moverContrincante(int casillasAvanzar, int turnoDePersonajeQueMueve){
+	public void moverContrincante(int casillaEspecifica, int turnoDePersonajeQueMueve){
 		for (Personaje personaje : personajes) {
 			if(personaje.getOrdenTurno() == turnoDePersonajeQueMueve){
-				if(casillasAvanzar != 0){
-					moverPersonajeLogico(false, personaje, casillasAvanzar);
-					moverEnGUI(personaje);
-					siguienteRonda();
-					return;
-				}
+				personaje.setNumDeCasilla(casillaEspecifica);
+				moverEnGUI(personaje);
+				siguienteRonda();
+				return;
 			}
 		}
 	}
@@ -456,6 +454,10 @@ public class Juego extends javax.swing.JFrame {
 
 	public void setTuboUsado(boolean tuboUsado) {
 		this.tuboUsado = tuboUsado;
+	}
+
+	public Personaje getPersonaJugando() {
+		return personaJugando;
 	}
 	
 	
