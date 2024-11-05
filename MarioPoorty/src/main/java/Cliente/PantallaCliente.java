@@ -19,6 +19,7 @@ public class PantallaCliente extends javax.swing.JFrame {
 	public PantallaCliente() {
 		initComponents();
 		cliente = new Cliente(this);
+		cliente.run();
 	}
 
 	/**
@@ -37,6 +38,7 @@ public class PantallaCliente extends javax.swing.JFrame {
 
         txaCliente.setColumns(20);
         txaCliente.setRows(5);
+        txaCliente.setEnabled(false);
         jScrollPane1.setViewportView(txaCliente);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -56,7 +58,12 @@ public class PantallaCliente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+	
+	
+	public void write(String text){
+        this.txaCliente.append(text + "\n");
+    }
+	
 	/**
 	 * @param args the command line arguments
 	 */

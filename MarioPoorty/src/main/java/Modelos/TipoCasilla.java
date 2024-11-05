@@ -27,5 +27,7 @@ public enum TipoCasilla implements Serializable{
 	ESTRELLA,
 	FUEGO,
 	HIELO,
-	COLA
+	COLA,
+	INICIO,
+	FINAL
 }
