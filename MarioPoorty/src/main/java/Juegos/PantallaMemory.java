@@ -4,17 +4,40 @@
  */
 package Juegos;
 
+import Modelos.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+
 /**
  *
  * @author Proyecto Diseño
  */
-public class PantallaMemory extends javax.swing.JFrame {
+public class PantallaMemory extends javax.swing.JFrame implements ActionListener{
+	private int adivinando = 0; //contador de cuando se están presionando poco a pco
+	private int filaAdivinando = 0;
+	private int colAdivinando = 0;
+	private int correctas = 0;
+	private int tries = 9;
+	private int guardada = 0; //num de la carta guardada
+	private int personaQueJuega = 1;
+	private int persona = 1;
+	private boolean LISTOCAMBIAR;
+	private JButton[][] botones = new JButton[6][3];
+	private int[][] logica = new int[6][3];
+	ImageIcon cartaIcon = new ImageIcon(getClass().getResource("/Pics/carta.png"));
 
+	
 	/**
 	 * Creates new form PantallaMemory
 	 */
 	public PantallaMemory() {
 		initComponents();
+		ponerLogica();
+		ponerBotones();
 	}
 
 	/**
@@ -26,22 +49,109 @@ public class PantallaMemory extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlJuego = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        lblTurno = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblTries = new javax.swing.JLabel();
+        lblPairs = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlJuego.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout pnlJuegoLayout = new javax.swing.GroupLayout(pnlJuego);
+        pnlJuego.setLayout(pnlJuegoLayout);
+        pnlJuegoLayout.setHorizontalGroup(
+            pnlJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        pnlJuegoLayout.setVerticalGroup(
+            pnlJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 200, Short.MAX_VALUE)
+        );
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("TURNO");
+
+        lblTurno.setText("1");
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("INTENTOS");
+
+        lblTries.setText("9");
+
+        lblPairs.setText("0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlJuego, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTurno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                    .addComponent(lblTries, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPairs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTries, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblPairs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnlJuego, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+	private void ponerLogica(){
+		int[] ocurrencias = new int[10]; //para ver cuantas veces salen nums 1-9
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 3; j++) {
+				int num = Random.randomInt(1, 9);
+				while(ocurrencias[num] == 2){
+					num = Random.randomInt(1, 9);
+				}
+				logica[i][j] = num;
+				ocurrencias[num]++;
+			}
+		}
+		for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(logica[i][j]+" ");
+            }
+            System.out.println("");
+        }
+		
+	}
+	
+	private void ponerBotones(){
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 3; j++) {
+				botones[i][j] = new JButton(cartaIcon);
+				JButton boton = botones[i][j];
+				pnlJuego.add(boton);
+				boton.setBounds(25+60*i,15+58*j,33,53);
+				boton.addActionListener(this);
+			}
+		}
+	}
 	/**
 	 * @param args the command line arguments
 	 */
@@ -76,7 +186,80 @@ public class PantallaMemory extends javax.swing.JFrame {
 			}
 		});
 	}
+	
+	private int cartaEn(int n, int m){
+		return logica[n][m];
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblPairs;
+    private javax.swing.JLabel lblTries;
+    private javax.swing.JLabel lblTurno;
+    private javax.swing.JPanel pnlJuego;
     // End of variables declaration//GEN-END:variables
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JButton boton = (JButton)e.getSource();
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 3; j++) {
+				if(boton == botones[i][j]){
+					if(personaQueJuega != persona){
+						return;
+					}
+					if(adivinando == 0){
+						LISTOCAMBIAR = false;
+						guardada = cartaEn(i,j);
+						colAdivinando = i;
+						filaAdivinando = j;
+						adivinando++;
+						boton.setIcon(new ImageIcon(getClass().getResource("/Pics/Memoria/mem"+cartaEn(i, j)+".png")));
+						return;
+					}
+					
+					if(adivinando == 1){
+						boton.setIcon(new ImageIcon(getClass().getResource("/Pics/Memoria/mem"+cartaEn(i, j)+".png")));
+						if(i == colAdivinando && j == filaAdivinando){
+							nextTry();
+							return;
+						}
+						if(guardada == cartaEn(i,j)){
+							boton.setVisible(false);
+							botones[colAdivinando][filaAdivinando].setVisible(false);
+							lblPairs.setText(++correctas + "");
+							nextTry();
+							return;
+						} else {
+							nextTry();
+						}
+					}
+				
+				}
+			}
+		}
+	}
+	
+	public void nextTry(){
+		LISTOCAMBIAR = true;
+//		try {Thread.sleep(1000);} catch (InterruptedException ex) {} //para dar tiempo que la persona vea que hay.
+//		new Timer(1000, e -> resetBotones()).start();
+		Timer timer = new Timer(1000, e -> {
+			resetBotones();
+			((Timer)e.getSource()).stop(); // Stop the timer after it runs once
+		});
+		timer.setRepeats(false); // Ensure the timer only fires once
+		timer.start();
+		adivinando = 0;
+		lblTries.setText(--tries + "");
+	}
+	
+	public void resetBotones(){
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 3; j++) {
+				botones[i][j].setIcon(cartaIcon);
+			}
+		}
+	}
 }
