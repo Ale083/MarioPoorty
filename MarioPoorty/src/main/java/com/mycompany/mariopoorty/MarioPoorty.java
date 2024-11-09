@@ -21,10 +21,8 @@ public class MarioPoorty {
 			pantalla.servidor.run();
         }).start();
 		
-		
 		try {Thread.sleep(500);} catch (InterruptedException ex) {}
-		
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 3; i++) {
 			new Thread(() -> {
 				new PantallaCliente().setVisible(true);
 			}).start();

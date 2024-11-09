@@ -21,6 +21,7 @@ public class Personaje implements Serializable {
 	private int turnosPerdidos;
 	private JButton fichaPersonaje;
 	private ImageIcon imagenFicha;
+	private boolean repetirJuego;
 	
 	public Personaje(String nombre, int NUMEROCAMBIAR){
 		this.repetirTurno = false;
@@ -105,6 +106,14 @@ public class Personaje implements Serializable {
 
 	public JButton getFichaPersonaje() {
 		return fichaPersonaje;
+	}
+
+	public boolean isRepetirJuego() {
+		return repetirJuego;
+	}
+
+	public void setRepetirJuego(boolean repetirJuego) {
+		this.repetirJuego = repetirJuego;
 	}
 	
 	
