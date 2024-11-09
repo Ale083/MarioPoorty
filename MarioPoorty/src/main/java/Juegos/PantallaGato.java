@@ -171,6 +171,7 @@ public class PantallaGato extends javax.swing.JFrame implements ActionListener{
 //						logica[i][j] = 2;
 						jugadorQueJuega--;
 					}
+					lblTurno.setText("Va " + jugadorQueJuega);
 				}
 			}
 		}
