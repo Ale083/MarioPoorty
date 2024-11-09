@@ -11,6 +11,8 @@ import java.awt.Font;
 import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 /**
  *
@@ -229,10 +231,17 @@ public class Juego extends javax.swing.JFrame {
 				break;
 			}
 		}
+		System.out.println("repetir " + personaJugando.isRepetirJuego());
+		if(personaJugando.isRepetirJuego()){
+			personaJugando.setRepetirJuego(false);
+			txfResultadoDados.setText("" + 0);
+			jugarCasilla(personaJugando);
+			siguienteRonda();
+			return;
+		}
 		
 		if(personaJugando.getTurnosPerdidos()> 0){ //Si tiene x cantidad de turnos perdidos:
 			personaJugando.restarTurnosPerdidos(1);
-			System.out.println("akjsdaljs");
 			casillasAvanzar = 0;
 			txfResultadoDados.setText("P" + personaJugando.getTurnosPerdidos());
 			siguienteRonda(); // actualiza el turno, pone el turno de quien es y le pone el boton activado.
@@ -318,15 +327,26 @@ public class Juego extends javax.swing.JFrame {
 		switch(eventoDeCasilla){
 			case TipoCasilla.HIELO:
 				casillaHielo = true;
+				btnTirarDados.setEnabled(false);
+				contrincante = elegirContrincante();
+				contrincante.sumarTurnosPerdidos(2);
 				break;
 			case TipoCasilla.FUEGO:
 				casillaFuego = true;
+				btnTirarDados.setEnabled(false);
+				contrincante = elegirContrincante();
+				contrincante.setNumDeCasilla(0);
+				moverEnGUI(contrincante);
 				break;
 			case TipoCasilla.ESTRELLA:
 				repetirTurno = true;
 				break;
 			case TipoCasilla.COLA:
 				casillaCola = true;
+				btnTirarDados.setEnabled(false);
+				int avance = elegirCasillasAvanzarRetroceder();
+				personaJugando.setNumDeCasilla(personaJugando.getNumDeCasilla() + avance);
+				casillasAvanzar += avance;
 				break;
 			case TipoCasilla.CARCEL:
 				personaJugando.sumarTurnosPerdidos(2);
@@ -376,6 +396,33 @@ public class Juego extends javax.swing.JFrame {
 				return;
 			}
 		}
+	}
+	
+	public void moverPersonajeAlPrincipio(int turnoDePersonajeQueMueve){
+		for (Personaje personaje : personajes) {
+			if(personaje.getOrdenTurno() == turnoDePersonajeQueMueve){
+				personaje.setNumDeCasilla(0);
+				moverEnGUI(personaje);
+				return;
+			}
+		}
+	}
+	
+	private Personaje elegirContrincante(){
+		ElegirPersonajeAtacar pantallaElegirAtacar = new ElegirPersonajeAtacar(personaJugando,personajes);
+		
+		while(pantallaElegirAtacar.getEnemigoElegido() == null){
+			JOptionPane.showInternalMessageDialog(null, pantallaElegirAtacar, "Elija el personaje a atacar", HIDE_ON_CLOSE);
+			try {Thread.sleep(500);} catch (InterruptedException ex) {}
+		}
+		return pantallaElegirAtacar.getEnemigoElegido();
+	}
+	
+	private int elegirCasillasAvanzarRetroceder(){
+		ElegirCasillasNum pantallaElegirNum = new ElegirCasillasNum(personaJugando);
+		JOptionPane.showInternalMessageDialog(null, pantallaElegirNum, "Elija las casillas para retroceder/avanzar", HIDE_ON_CLOSE); //no hace falta while, el num por default es 0.
+		
+		return pantallaElegirNum.getNumEscogido();
 	}
 
 	public void setRepetirTurno(boolean repetirTurno) {
@@ -459,8 +506,29 @@ public class Juego extends javax.swing.JFrame {
 	public Personaje getPersonaJugando() {
 		return personaJugando;
 	}
+
+	public Personaje getContrincante() {
+		return contrincante;
+	}
+
+	public void setContrincante(Personaje contrincante) {
+		this.contrincante = contrincante;
+	}
 	
+	public void finEventoFuego(){
+		this.casillaFuego = false;
+	}
 	
-	
+	public void finEventoHielo(){
+		this.casillaHielo = false;
+	}
+
+	public TipoCasilla getJuegoActual() {
+		return juegoActual;
+	}
+
+	public void setJuegoEnProgreso(boolean juegoEnProgreso) {
+		this.juegoEnProgreso = juegoEnProgreso;
+	}
 
 }

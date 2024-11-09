@@ -65,12 +65,12 @@ public class Servidor {
 	
 	private void inicializarCasillas(){
         for (int i = 0; i < 9; i++) { //para apuntar a cada juego
-            tablero.add(getTipoDeCasilla(i)); 
-            tablero.add(getTipoDeCasilla(i)); //Mete 2 de gato, 2 de sopa ...
+            tablero.add(getTipoDeCasilla(8)); 
+            tablero.add(getTipoDeCasilla(8)); //Mete 2 de gato, 2 de sopa ...
         }
-        for(int i=9;i<17;i++)                
+        for(int i=9;i<17;i++)    {            
             tablero.add(getTipoDeCasilla(i)); //Mete 1 de las demás casillas
-        
+		}
         Collections.shuffle(tablero);
         int numDeTubo=1;
         for (int i = 0; i < tablero.size(); i++) { // recorre cada casilla

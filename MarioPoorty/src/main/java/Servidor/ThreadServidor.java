@@ -5,6 +5,7 @@
 package Servidor;
 
 import Modelos.Personaje;
+import Modelos.Random;
 import Modelos.TipoCasilla;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -58,8 +59,6 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
         mandarPrimerJugador();
         escogerPersonaje();
 		juegoEmpieza();
-		
-		
     }
 
 	@Override
@@ -80,7 +79,6 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 			salidaDatos.writeInt(numeroCliente);
 			if(numeroCliente==1){
 				servidor.setMaxJugadores(entradaDatos.readInt());
-				System.out.println("alskdja" + servidor.getMaxJugadores());
 			}
 		} catch (IOException ex) {System.out.println("Error con el algoritmo de primer jugador (ThreadServidor)");}
 	}
@@ -127,6 +125,36 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 						siguienteTurno(); //Pone a la siguiente persona a tirar los dados.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso siguienteTurno, señal 4 threadServidor");}
+				case 5:
+					try {
+						alguienGano(); //Pone a la siguiente persona a tirar los dados.
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso alguienGano, señal 5 threadServidor");}
+				case 6:
+					try {
+						fuegoUsado(); //Actualiza para los demás que el enemigo lo devuelva a 0 gráficamente.
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso fuegoUsado, señal 6 threadServidor");}
+				case 7:
+					try {
+						gatoConectarJugadores(); //Es el caso por si alguien empieza a jugar gato, abre la ventana para el oponente también.
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso gatoConectarJugadores, señal 7 threadServidor"); System.out.println(ex.getLocalizedMessage());}
+				case 8:
+					try {
+						mandarJugadaGato(); //Para mandar al oponente la jugada que hice
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso mandarJugadaGato, señal 8 threadServidor");}
+				case 9:
+					try {
+						abrirCardsTodos(); //Para mandar al oponente la jugada que hice
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso abrirCardsTodos, señal 9 threadServidor");}
+				case 10:
+					try {
+						mandarValoresCartas(); //Para mandar a la persona que cayó, los valores de las otras cartas.
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso mandarValoresCartas, señal 10 threadServidor");}
 			}
 		}
 	}
@@ -175,14 +203,69 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 		}
 	}
 	
+	private void alguienGano() throws Exception{
+		String nombreWinner = entradaDatos.readUTF();
+		for (ThreadServidor contrincante : contrincantes) {
+			contrincante.salidaDatos.writeInt(4);
+			contrincante.salidaDatos.writeUTF(nombreWinner);
+		}
+	}
 	
+	private void fuegoUsado() throws Exception{
+		int turnoDeEnemigo = entradaDatos.readInt();
+		for (ThreadServidor contrincante : contrincantes) {
+			contrincante.salidaDatos.writeInt(5);
+			contrincante.salidaDatos.writeInt(turnoDeEnemigo);
+		}
+	}
 	
+	private void gatoConectarJugadores() throws Exception{
+		System.out.println("ale" + nombreCliente);
+		ThreadServidor oponente = contrincantes.get(Random.randomInt(0, contrincantes.size()-1));
+		salidaDatos.writeInt(oponente.getPersonajeEnTablero().getOrdenTurno());
+		oponente.getSalidaDatos().writeInt(6);
+		oponente.getSalidaDatos().writeUTF(nombreCliente);
+	}
 	
+	private void mandarJugadaGato() throws Exception{
+		boolean gana = entradaDatos.readBoolean();
+		int col = entradaDatos.readInt();
+		int fila = entradaDatos.readInt();
+		String nombreOponente = entradaDatos.readUTF();
+		System.out.println(nombreOponente);
+		
+		for (ThreadServidor contrincante : contrincantes) {
+			System.out.println("nombre" + contrincante.getPersonajeEnTablero().getNombre());
+			System.out.println(contrincante.getPersonajeEnTablero().getNombre().equals(nombreOponente));
+			if(contrincante.getPersonajeEnTablero().getNombre().equals(nombreOponente)){
+				System.out.println("sirve");
+				contrincante.salidaDatos.writeBoolean(gana);
+				contrincante.salidaDatos.writeInt(col);
+				contrincante.salidaDatos.writeInt(fila);
+				break;
+			}
+		}
+	}
 	
+	private void abrirCardsTodos() throws Exception{
+		for (ThreadServidor contrincante : contrincantes) {
+			contrincante.getSalidaDatos().writeInt(7);
+			contrincante.getSalidaDatos().writeUTF(nombreCliente);
+		}
+	}
 	
-	
-	
-	
+	private void mandarValoresCartas() throws Exception{
+		String contrincante = entradaDatos.readUTF();
+		int cartaNum = entradaDatos.readInt();
+		int cartaType = entradaDatos.readInt();
+		for (ThreadServidor c : contrincantes) {
+			if(c.getNombreCliente().equals(contrincante)){
+				c.getSalidaDatos().writeInt(cartaNum);
+				c.getSalidaDatos().writeInt(cartaType);
+				break;
+			}
+		}
+	}
 	
 	
 	//GETTERS Y SETTERS
