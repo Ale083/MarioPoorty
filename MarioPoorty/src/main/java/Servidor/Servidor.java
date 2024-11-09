@@ -65,8 +65,8 @@ public class Servidor {
 	
 	private void inicializarCasillas(){
         for (int i = 0; i < 9; i++) { //para apuntar a cada juego
-            tablero.add(getTipoDeCasilla(8)); 
-            tablero.add(getTipoDeCasilla(8)); //Mete 2 de gato, 2 de sopa ...
+            tablero.add(getTipoDeCasilla(0)); 
+            tablero.add(getTipoDeCasilla(0)); //Mete 2 de gato, 2 de sopa ...
         }
         for(int i=9;i<17;i++)    {            
             tablero.add(getTipoDeCasilla(i)); //Mete 1 de las demás casillas
