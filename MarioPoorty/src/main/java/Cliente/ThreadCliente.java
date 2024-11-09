@@ -73,7 +73,6 @@ public class ThreadCliente extends Thread{
 			try {
 				evento = entradaDatos.readInt();
 			} catch (IOException ex) {System.out.println("Error con entrada de evento en threadCliente");}
-			
 			switch(evento){
 				case 0:
 					try {
@@ -110,10 +109,10 @@ public class ThreadCliente extends Thread{
 					try {
 						abrirGatoComoOponente();//Alguien más cayó en gato y fui escogido como oponente.
 						break;
-					} catch (Exception ex) {System.out.println("Error con caso abrirGatoComoOponente, señal 6 ThreadCliente");}
+					} catch (Exception ex) {System.out.println("Error con caso abrirGatoComoOponente, señal 6 ThreadCliente");ex.printStackTrace();}
 				case 7:
 					try {
-						abrirCardsComoOponente();//Alguien más cayó en gato y fui escogido como oponente.
+						abrirCardsComoOponente();//Alguien más cayó en cards y fui escogido como oponente.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso abrirCardsComoOponente, señal 7 ThreadCliente");}
 			}
@@ -271,6 +270,7 @@ public class ThreadCliente extends Thread{
 				break;
 			case GATO:
 				juegoGato(personaje);
+				System.out.println("aaa" + personaje.isRepetirJuego());
 				break;
 			case BOMBERMARIO:
 				//
@@ -359,7 +359,6 @@ public class ThreadCliente extends Thread{
 		
 		while(pantalla.isJugando()){
 			gatoJugar(pantalla, nombreOponente);
-			
 			if(pantalla.isLleno()){
 				JOptionPane.showInternalMessageDialog(null, "Empate, cuenta como gane", nombre, 1);
 				personaje.setRepetirJuego(false);
@@ -381,33 +380,42 @@ public class ThreadCliente extends Thread{
 				JOptionPane.showInternalMessageDialog(null, "Perdiste", nombre, 0);
 				personaje.setRepetirJuego(true);
 				pantalla.terminar();
+				salidaDatos.writeInt(8);
+				salidaDatos.writeBoolean(true);
+				salidaDatos.writeInt(pantalla.getColumnaJugada());
+				salidaDatos.writeInt(pantalla.getFilaJugada());
+				salidaDatos.writeUTF(nombreOponente);
+				sleep(1000);
+				break;
 			}
 		}
 		hayJuego = false;
+		pantalla.setVisible(false);
 		System.out.println("JUEGO TERMINADO");
 	}
 	
 	private void abrirGatoComoOponente() throws Exception{
 		String nombreOponente = entradaDatos.readUTF();
-		System.out.println("llegue caca");
 		PantallaGato pantalla = new PantallaGato();
-		System.out.println("llegue pedo");
 		pantalla.setPersona(2);
 		pantalla.setTitle(nombre);
 		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		pantalla.setVisible(true);
 		while(true){
-			
+			System.out.println("ca1");
 			if(recibirTurnoOponente(pantalla,nombreOponente)){
 				break;
 			}
-			
+			System.out.println("ca2");
 			gatoJugar(pantalla, nombreOponente);
-			
+			System.out.println("ca3");
 			if(pantalla.isLleno()){
 				break;
 			}
+			
 		}
+		System.out.println("terimno popoente");
+		pantalla.setVisible(false);
 	}
 	
 	private void gatoJugar(PantallaGato pantalla, String nombreOponente) throws Exception{
@@ -420,7 +428,6 @@ public class ThreadCliente extends Thread{
 		salidaDatos.writeBoolean(false);
 		salidaDatos.writeInt(pantalla.getColumnaJugada());
 		salidaDatos.writeInt(pantalla.getFilaJugada());
-		System.out.println(nombreOponente);
 		salidaDatos.writeUTF(nombreOponente);
 		pantalla.reiniciarColFila();
 	}
@@ -432,6 +439,8 @@ public class ThreadCliente extends Thread{
 		gano = entradaDatos.readBoolean();
 		c = entradaDatos.readInt();
 		f = entradaDatos.readInt();
+		if(gano) return true;
+		System.out.println(c + " caca " + f);
 		pantalla.ponerEnGUI(c,f);//375
 		pantalla.reiniciarColFila();
 		if(pantalla.revisarGane()){ //revisar si después de esa jugada de P1 ganó

@@ -7,6 +7,7 @@ package Tablero;
 import Modelos.Personaje;
 import Modelos.Random;
 import Modelos.TipoCasilla;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -324,6 +325,7 @@ public class Juego extends javax.swing.JFrame {
 	private void jugarCasilla(Personaje personaJugando){
 		TipoCasilla eventoDeCasilla = tablero.get(personaJugando.getNumDeCasilla());
 		System.out.println(eventoDeCasilla.name());
+		casillasGUI[personaJugando.getNumDeCasilla()].setBackground(Color.green);
 		switch(eventoDeCasilla){
 			case TipoCasilla.HIELO:
 				casillaHielo = true;
