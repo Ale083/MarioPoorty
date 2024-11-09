@@ -51,7 +51,7 @@ public class Cliente {
 		
 		try {
 			escogerPersonaje();
-		} catch (Exception ex) {System.out.println("Error en algoritmo de escogencia de personaje");System.out.println(ex.getMessage());}
+		} catch (Exception ex) {System.out.println("Error en algoritmo de escogencia de personaje");}
 		
 		new ThreadCliente(entradaDatos,salidaDatos,entradaObjetos,salidaObjetos,pantallaCliente,nombreCliente).start();
 	}
@@ -88,9 +88,7 @@ public class Cliente {
 		personajesParaEscoger = (ArrayList<Integer>) entradaObjetos.readObject();
 		pantallaElegirPersonaje = new ElegirPersonaje(personajesParaEscoger);
 		while(true){
-			System.out.println("escoger perjasoijasd2");
 			JOptionPane.showInternalMessageDialog( null, pantallaElegirPersonaje, "Elija su personaje", HIDE_ON_CLOSE);
-			System.out.println("escoger perjasoijasd4");
 			if(pantallaElegirPersonaje.getElegido() != -1){ //si escogió un personaje va a ser algo más que -1
 				salidaObjetos.writeObject(pantallaElegirPersonaje.getDisponibles()); //Manda la lista actualizada
 				break;

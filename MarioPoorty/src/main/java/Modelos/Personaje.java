@@ -15,7 +15,6 @@ import javax.swing.JButton;
 public class Personaje implements Serializable {
 	private boolean repetirTurno;
 	private String nombre;
-	private int NUMEROCAMBIAR;
 	private int numDeCasilla;
 	private int ordenTurno;
 	private int turnosPerdidos;
@@ -23,14 +22,13 @@ public class Personaje implements Serializable {
 	private ImageIcon imagenFicha;
 	private boolean repetirJuego;
 	
-	public Personaje(String nombre, int NUMEROCAMBIAR){
+	public Personaje(String nombre, int numPersonaje){
 		this.repetirTurno = false;
 		this.nombre = nombre;
-		this.NUMEROCAMBIAR = NUMEROCAMBIAR;
 		this.numDeCasilla = 0; //casilla actual
 		this.ordenTurno = -1; //Define el lugar de orden de turno que le tocó
 		this.turnosPerdidos = 0; 
-		this.imagenFicha = ponerImagen(NUMEROCAMBIAR);
+		this.imagenFicha = ponerImagen(numPersonaje);
 	}
 	
 	
@@ -38,8 +36,8 @@ public class Personaje implements Serializable {
 		numDeCasilla += cantidad;
 	}
 	
-	private ImageIcon ponerImagen(int NUMEROCAMBIAR){
-		switch(NUMEROCAMBIAR){
+	private ImageIcon ponerImagen(int numPersonaje){
+		switch(numPersonaje){
 			case 0: 
 				return new ImageIcon(getClass().getResource("/Pics/PaperMarioTransparente78x100.png"));
 			case 1:

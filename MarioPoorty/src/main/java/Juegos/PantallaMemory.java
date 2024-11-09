@@ -25,7 +25,7 @@ public class PantallaMemory extends javax.swing.JFrame implements ActionListener
 	private int guardada = 0; //num de la carta guardada
 	private int personaQueJuega = 1;
 	private int persona = 1;
-	private boolean LISTOCAMBIAR;
+	private boolean enTurno;
 	private JButton[][] botones = new JButton[6][3];
 	private int[][] logica = new int[6][3];
 	ImageIcon cartaIcon = new ImageIcon(getClass().getResource("/Pics/carta.png"));
@@ -132,9 +132,9 @@ public class PantallaMemory extends javax.swing.JFrame implements ActionListener
 				ocurrencias[num]++;
 			}
 		}
-		for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(logica[i][j]+" ");
+		for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 6; j++) {
+                System.out.print(logica[j][i]+" ");
             }
             System.out.println("");
         }
@@ -210,7 +210,7 @@ public class PantallaMemory extends javax.swing.JFrame implements ActionListener
 						return;
 					}
 					if(adivinando == 0){
-						LISTOCAMBIAR = false;
+						enTurno = true;
 						guardada = cartaEn(i,j);
 						colAdivinando = i;
 						filaAdivinando = j;
@@ -242,14 +242,12 @@ public class PantallaMemory extends javax.swing.JFrame implements ActionListener
 	}
 	
 	public void nextTry(){
-		LISTOCAMBIAR = true;
-//		try {Thread.sleep(1000);} catch (InterruptedException ex) {} //para dar tiempo que la persona vea que hay.
-//		new Timer(1000, e -> resetBotones()).start();
+		enTurno = false;
 		Timer timer = new Timer(1000, e -> {
 			resetBotones();
-			((Timer)e.getSource()).stop(); // Stop the timer after it runs once
+			((Timer)e.getSource()).stop(); 
 		});
-		timer.setRepeats(false); // Ensure the timer only fires once
+		timer.setRepeats(false); 
 		timer.start();
 		adivinando = 0;
 		lblTries.setText(--tries + "");
@@ -262,4 +260,33 @@ public class PantallaMemory extends javax.swing.JFrame implements ActionListener
 			}
 		}
 	}
+
+	public void setPersona(int persona) {
+		this.persona = persona;
+	}
+
+	public boolean isEnTurno() {
+		return enTurno;
+	}
+
+	public void empezarTurno() {
+		this.enTurno = true;
+	}
+
+	public void setPersonaQueJuega(int personaQueJuega) {
+		this.personaQueJuega = personaQueJuega;
+	}
+	
+	public boolean noMoreTries(){
+		if(tries < 1){
+			return true;
+		}
+		return false;
+	}
+
+	public int getCorrectas() {
+		return correctas;
+	}
+	
+	
 }

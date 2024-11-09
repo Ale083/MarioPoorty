@@ -14,8 +14,6 @@ import javax.swing.JButton;
  * @author Proyecto Diseño
  */
 public class PantallaGato extends javax.swing.JFrame implements ActionListener{
-	private String miNombre;
-	private String contrincanteNombre;
 	private JButton[][] GUIBoard = new JButton[3][3];
 	private int[][] logica = new int[3][3];
 	private ImageIcon iconNada = new ImageIcon(getClass().getResource("/Pics/nada50x50.png"));
@@ -26,8 +24,6 @@ public class PantallaGato extends javax.swing.JFrame implements ActionListener{
 	
 	private int filaJugada = -1;
 	private int columnaJugada = -1;
-	private boolean RESULTADOCAMBIAR;
-	private boolean tableroLleno;
 	private boolean jugando;
 	
 	public PantallaGato() {
@@ -165,7 +161,6 @@ public class PantallaGato extends javax.swing.JFrame implements ActionListener{
 						boton.setIcon(iconP1);
 //						logica[i][j] = 1;
 						jugadorQueJuega++;
-						System.out.println(jugadorQueJuega);
 					} else if( persona == 2){
 						boton.setIcon(iconP2);
 //						logica[i][j] = 2;

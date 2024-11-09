@@ -149,7 +149,6 @@ public class PantallaPath extends javax.swing.JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		JButton boton =(JButton) evt.getSource();
-		System.out.println(boton.getRolloverIcon());
 		if(boton.getRolloverIcon()!=null){
             
             if(filasFaltantes == -1){
