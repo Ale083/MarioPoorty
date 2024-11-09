@@ -232,7 +232,6 @@ public class Juego extends javax.swing.JFrame {
 				break;
 			}
 		}
-		System.out.println("repetir " + personaJugando.isRepetirJuego());
 		if(personaJugando.isRepetirJuego()){
 			personaJugando.setRepetirJuego(false);
 			txfResultadoDados.setText("" + 0);

@@ -115,6 +115,11 @@ public class ThreadCliente extends Thread{
 						abrirCardsComoOponente();//Alguien más cayó en cards y fui escogido como oponente.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso abrirCardsComoOponente, señal 7 ThreadCliente");}
+				case 8:
+					try {
+						abrirMemoryComoOponente();//Alguien más cayó en memory y fui escogido como oponente.
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso abrirMemoryComoOponente, señal 8 ThreadCliente");}
 			}
 		}
         
@@ -127,7 +132,7 @@ public class ThreadCliente extends Thread{
 			int resDados = dadosTurnoPrincipio.getResultado();
 			if(resDados != -1){ //si tiró los dados va a ser algo más que -1
 				pantallaCliente.write("El resultado de mis dados fue de " + resDados);
-				salidaDatos.writeInt(0); //señal de evento para cambiar PUESTOCAMBIAR
+				salidaDatos.writeInt(0); //señal de evento para cambiar el resultadoDeDados
 				salidaDatos.writeInt(resDados); //resDados sería el resultado de los dados.
 				break;
 			}
@@ -219,8 +224,6 @@ public class ThreadCliente extends Thread{
 		while(juego.getPersonajeQueJuega() != repetirTurno){
 			juego.siguienteRonda();
 		}
-		System.out.println("ESTO DEBERIA SIEMPRE IMRPIMIR FALSE" + juego.isRepetirTurno());
-		//TODO: y bororar arriba: setRepetirTurno(false);
 	}
 	
 	private void ponerMiTurnoDeNuevo(int repetirTurno) throws Exception{
@@ -259,8 +262,7 @@ public class ThreadCliente extends Thread{
 				juegoSopa(personaje);
 				break;
 			case MEMORIA:
-//				juegoMemoria(personaje);
-				hayJuego = false; //TODOQUITAR
+				juegoMemoria(personaje);
 				break;
 			case CARDS:
 				juegoCards(personaje);
@@ -270,13 +272,14 @@ public class ThreadCliente extends Thread{
 				break;
 			case GATO:
 				juegoGato(personaje);
-				System.out.println("aaa" + personaje.isRepetirJuego());
 				break;
 			case BOMBERMARIO:
-				//
+				hayJuego = false;
+				//TODO
 				break;
 			case CATCHCAT:
-				//
+				hayJuego = false;
+				//TODO
 				break;
 		}
 	}
@@ -349,7 +352,7 @@ public class ThreadCliente extends Thread{
 		}
 		PantallaGato pantalla = new PantallaGato();
 		pantalla.setPersona(1);
-		pantalla.setTitle(nombre);
+		pantalla.setTitle("Persona 1: " + nombre);
 		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		pantalla.setVisible(true);
 		
@@ -374,7 +377,6 @@ public class ThreadCliente extends Thread{
 				pantalla.terminar();
 				break;
 			}
-			System.out.println(nombre + " " + c + " " + f);
 			pantalla.ponerEnGUI(c, f);
 			if(pantalla.revisarGane()){//si gano el oponente
 				JOptionPane.showInternalMessageDialog(null, "Perdiste", nombre, 0);
@@ -391,30 +393,25 @@ public class ThreadCliente extends Thread{
 		}
 		hayJuego = false;
 		pantalla.setVisible(false);
-		System.out.println("JUEGO TERMINADO");
 	}
 	
 	private void abrirGatoComoOponente() throws Exception{
 		String nombreOponente = entradaDatos.readUTF();
 		PantallaGato pantalla = new PantallaGato();
 		pantalla.setPersona(2);
-		pantalla.setTitle(nombre);
+		pantalla.setTitle("Persona 2: " + nombre);
 		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		pantalla.setVisible(true);
 		while(true){
-			System.out.println("ca1");
 			if(recibirTurnoOponente(pantalla,nombreOponente)){
 				break;
 			}
-			System.out.println("ca2");
 			gatoJugar(pantalla, nombreOponente);
-			System.out.println("ca3");
 			if(pantalla.isLleno()){
 				break;
 			}
 			
 		}
-		System.out.println("terimno popoente");
 		pantalla.setVisible(false);
 	}
 	
@@ -422,8 +419,6 @@ public class ThreadCliente extends Thread{
 		while(pantalla.getColumnaJugada() == -1 || pantalla.getFilaJugada() == -1){
 			sleep(500);
 		} //espera a que presione algo.
-		System.out.println("pantalla.getColumnaJugada()" + pantalla.getColumnaJugada());
-		System.out.println("pantalla.getFilaJugada()" + pantalla.getFilaJugada());
 		salidaDatos.writeInt(8);
 		salidaDatos.writeBoolean(false);
 		salidaDatos.writeInt(pantalla.getColumnaJugada());
@@ -440,7 +435,6 @@ public class ThreadCliente extends Thread{
 		c = entradaDatos.readInt();
 		f = entradaDatos.readInt();
 		if(gano) return true;
-		System.out.println(c + " caca " + f);
 		pantalla.ponerEnGUI(c,f);//375
 		pantalla.reiniciarColFila();
 		if(pantalla.revisarGane()){ //revisar si después de esa jugada de P1 ganó
@@ -453,23 +447,6 @@ public class ThreadCliente extends Thread{
 		} else {
 			return false;
 		}
-	}
-	
-	private void juegoMemoria(Personaje personaje) throws Exception{
-		salidaDatos.writeInt(7);
-		int turnoOponente = entradaDatos.readInt();
-		String nombreOponente = "";
-		for (Personaje p : personajes) {
-			if(p.getOrdenTurno() == turnoOponente){
-				nombreOponente = p.getNombre();
-				break;
-			}
-		}
-		PantallaMemory pantalla = new PantallaMemory();
-//		pantalla.setPersona(1);
-		pantalla.setTitle(nombre);
-		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
-		pantalla.setVisible(true);
 	}
 	
 	private void juegoCards(Personaje personaje) throws Exception{
@@ -502,7 +479,7 @@ public class ThreadCliente extends Thread{
 	private void abrirCardsComoOponente() throws Exception{
 		String contrincanteNombre = entradaDatos.readUTF();
 		PantallaCards pantalla = new PantallaCards();
-		pantalla.setVisible(true);       
+		pantalla.setVisible(true);
         pantalla.setTitle(nombre);
         pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
         
@@ -528,5 +505,82 @@ public class ThreadCliente extends Thread{
 		}
 		return true;
 	}
+	
+	private void juegoMemoria(Personaje personaje) throws Exception{
+		salidaDatos.writeInt(11);
+		int turnoOponente = entradaDatos.readInt();
+		String nombreOponente = "";
+		for (Personaje p : personajes) {
+			if(p.getOrdenTurno() == turnoOponente){
+				nombreOponente = p.getNombre();
+				break;
+			}
+		}
+		PantallaMemory pantalla = new PantallaMemory();
+		pantalla.setPersona(1);
+		pantalla.setTitle("Persona 1: " + nombre);
+		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
+		pantalla.setVisible(true);
+		pantalla.setPersonaQueJuega(2);
+		int correctasOponente= 0;
+		while(true){
+			correctasOponente = entradaDatos.readInt();
+			pantalla.empezarTurno();
+			pantalla.setPersonaQueJuega(1);
+			while(pantalla.isEnTurno()){
+				sleep(500);
+			}
+			
+			if(correctasOponente != -1){ //si ya se le acabaron los intentos al oponente (por ende a él tambien)
+				pantalla.setVisible(false);
+				if(correctasOponente<= pantalla.getCorrectas()){
+					JOptionPane.showMessageDialog(null, "winner", "", 1);
+					personaje.setRepetirJuego(false);
+					break;
+				} else{
+					JOptionPane.showMessageDialog(null, "loser", "", 0);
+					personaje.setRepetirJuego(true);
+					break;
+				}
+			}
+			salidaDatos.writeInt(12);
+			salidaDatos.writeInt(pantalla.getCorrectas());
+			salidaDatos.writeUTF(nombreOponente);
+			pantalla.setPersonaQueJuega(2);
+		}
+		hayJuego = false;
+	}
+	
+	private void abrirMemoryComoOponente() throws Exception{
+		String nombreOponente = entradaDatos.readUTF();
+		PantallaMemory pantalla = new PantallaMemory();
+		pantalla.setPersona(2);
+		pantalla.setTitle("Persona 2: " + nombre);
+		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
+		pantalla.setVisible(true);
+		
+		while(true){
+			pantalla.empezarTurno();
+			pantalla.setPersonaQueJuega(2);
+			while(pantalla.isEnTurno()){
+				sleep(500);
+			}
+			if(pantalla.noMoreTries()){ //si se queda sin intentos manda las palabras correctas
+				pantalla.setVisible(false);
+				salidaDatos.writeInt(12);
+				salidaDatos.writeInt(pantalla.getCorrectas());
+				salidaDatos.writeUTF(nombreOponente);
+				break;
+			} else{ //si aun tiene intentos manda -1
+				salidaDatos.writeInt(12);
+				salidaDatos.writeInt(-1);
+				salidaDatos.writeUTF(nombreOponente);
+			}
+			pantalla.setPersonaQueJuega(1);
+			entradaDatos.readInt(); //queda esperando a que la otra persona mande algo para ir al siguiente turno.
+		}
+	}
+	
 }
 
+	

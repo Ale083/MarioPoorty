@@ -102,70 +102,70 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 			
 			switch(evento){
 				case 0: //caso para poner que num le salio en los dados del principio
-					try {System.out.println("caso 0");resultadoDados = entradaDatos.readInt(); }//Recibe como puesto el número que le salió en los dados.
+					try {resultadoDados = entradaDatos.readInt(); }//Recibe como puesto el número que le salió en los dados.
 					catch (Exception ex) {System.out.println("Error en evento 0 en threadServidor");}
 					
 					break;
 				case 1: 
 					try {
-						System.out.println("caso 1");
 						pasarAEnemigosMovimientos(); //Pasa a los enemigos la cantidad de casillas que se movio esta persona
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso pasarAEnemigosMovimientos, señal 1 threadServidor");}
 				case 2:
 					try {
-						System.out.println("caso 2");
 						turnoTableroEnemigosRepetir(); //actualiza a los enemigos para que tengan el turno de nuevo de la misma persona, se usa cuando una persona repite
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso turnoTableroEnemigosRepetir, señal 2 threadServidor");}
 				case 3:
 					try {
-						System.out.println("caso 3");
 						jugarDeNuevo(); //Llama a la señal 1 del threadCliente, y le da el personaje de este thread, hace que repita el turno, se usa despues de toda la serie de señales para repetir.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso jugarDeNuevo, señal 3 threadServidor");}
 				case 4:
 					try {
-						System.out.println("caso 4");
 						siguienteTurno(); //Pone a la siguiente persona a tirar los dados.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso siguienteTurno, señal 4 threadServidor");}
 				case 5:
 					try {
-						System.out.println("caso 5");
-						alguienGano(); //Pone a la siguiente persona a tirar los dados.
+						alguienGano(); //Si alguien gana
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso alguienGano, señal 5 threadServidor");}
 				case 6:
 					try {
-						System.out.println("caso 6");
 						fuegoUsado(); //Actualiza para los demás que el enemigo lo devuelva a 0 gráficamente.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso fuegoUsado, señal 6 threadServidor");}
 				case 7:
 					try {
-						System.out.println("caso 7");
 						gatoConectarJugadores(); //Es el caso por si alguien empieza a jugar gato, abre la ventana para el oponente también.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso gatoConectarJugadores, señal 7 threadServidor"); System.out.println(ex.getLocalizedMessage());}
 				case 8:
 					try {
-						System.out.println("caso 8");
 						mandarJugadaGato(); //Para mandar al oponente la jugada que hice
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso mandarJugadaGato, señal 8 threadServidor");}
 				case 9:
 					try {
-						System.out.println("caso 9");
-						abrirCardsTodos(); //Para mandar al oponente la jugada que hice
+						abrirCardsTodos(); //Para mandar a los demas a abrir cards
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso abrirCardsTodos, señal 9 threadServidor");}
 				case 10:
 					try {
-						System.out.println("caso 10");
 						mandarValoresCartas(); //Para mandar a la persona que cayó, los valores de las otras cartas.
 						break;
 					} catch (Exception ex) {System.out.println("Error con caso mandarValoresCartas, señal 10 threadServidor");}
+				case 11:
+					try {
+						memoryConectarOponente(); // para mandar a que el oponente le abra memory
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso memoryConectarOponente, señal 11 threadServidor");}
+				case 12:
+					try {
+						mandarParejasMemory(); // para mandar a que el oponente le abra memory
+						break;
+					} catch (Exception ex) {System.out.println("Error con caso mandarParejasMemory, señal 12 threadServidor");}
 			}
 		}
 	}
@@ -231,7 +231,6 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 	}
 	
 	private void gatoConectarJugadores() throws Exception{
-		System.out.println("ale" + nombreCliente);
 		ThreadServidor oponente = contrincantes.get(Random.randomInt(0, contrincantes.size()-1));
 		salidaDatos.writeInt(oponente.getPersonajeEnTablero().getOrdenTurno());
 		oponente.getSalidaDatos().writeInt(6);
@@ -243,8 +242,6 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 		int col = entradaDatos.readInt();
 		int fila = entradaDatos.readInt();
 		String nombreOponente = entradaDatos.readUTF();
-		System.out.println(nombreOponente);
-		System.out.println("en threasvsirdor col" + col + " y fila " + fila);
 		for (ThreadServidor contrincante : contrincantes) {
 			if(contrincante.getPersonajeEnTablero().getNombre().equals(nombreOponente)){
 				contrincante.salidaDatos.writeBoolean(gana);
@@ -275,6 +272,23 @@ public class ThreadServidor extends Thread implements Comparable<ThreadServidor>
 		}
 	}
 	
+	private void memoryConectarOponente() throws Exception{
+		ThreadServidor oponente = contrincantes.get(Random.randomInt(0, contrincantes.size()-1));
+		salidaDatos.writeInt(oponente.getPersonajeEnTablero().getOrdenTurno());
+		oponente.getSalidaDatos().writeInt(8);
+		oponente.getSalidaDatos().writeUTF(nombreCliente);
+	}
+	
+	private void mandarParejasMemory() throws Exception{
+		int correctas = entradaDatos.readInt();
+		String contrincante = entradaDatos.readUTF();
+		for (ThreadServidor c : contrincantes) {
+			if(c.getNombreCliente().equals(contrincante)){
+				c.getSalidaDatos().writeInt(correctas);
+				break;
+			}
+		}
+	}
 	
 	//GETTERS Y SETTERS
 	public String getNombreCliente() {

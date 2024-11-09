@@ -28,9 +28,6 @@ public class PantallaSopa extends javax.swing.JFrame implements ActionListener{
 	private int tamanoLetra;
 	private int[][] tableroLogico;
 	private JButton[][] tableroGUI;
-	private int CONTADORCAMBIAR;
-	private int XCAMBIAR;
-	private int YCAMBIAR;
 	private ArrayList<String> listaPalabras = new ArrayList<String>();
 	private String[] palabrasBuscar = new String[4];
 	private String buscandoPalabra = "";
@@ -496,7 +493,6 @@ public class PantallaSopa extends javax.swing.JFrame implements ActionListener{
 			for (int l = 0; l < tamanoSopa; l++) {
 				if (button == tableroGUI[k][l]) {
 					buscandoPalabra += button.getText();
-					System.out.println(buscandoPalabra);
 					tableroGUI[k][l].setBackground(Color.blue);
 				}
 			}
