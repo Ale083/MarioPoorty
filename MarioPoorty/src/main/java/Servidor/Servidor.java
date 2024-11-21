@@ -178,7 +178,7 @@ public class Servidor {
             case 2:return  TipoCasilla.PATH;
             case 3:return  TipoCasilla.MEMORIA;
             case 4:return  TipoCasilla.CATCHCAT;//"CAT";
-            case 5:return  TipoCasilla.BOMBERMARIO;//"BOMBER";
+            case 5:return  TipoCasilla.ESTRELLA;//"BOMBER";
             case 6:return  TipoCasilla.GUESSWHO;
             case 7:return  TipoCasilla.COINS;
             case 8:return  TipoCasilla.CARDS;

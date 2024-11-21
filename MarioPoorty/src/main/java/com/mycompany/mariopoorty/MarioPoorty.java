@@ -22,7 +22,7 @@ public class MarioPoorty {
         }).start();
 		
 		try {Thread.sleep(500);} catch (InterruptedException ex) {}
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 5; i++) {
 			new Thread(() -> {
 				new PantallaCliente().setVisible(true);
 			}).start();

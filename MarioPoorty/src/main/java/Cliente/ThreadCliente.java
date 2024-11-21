@@ -4,6 +4,8 @@
  */
 package Cliente;
 
+//import Juegos.BomberMarioGUI;
+import Juegos.CatchTheCatGUI;
 import Juegos.PantallaCards;
 import Juegos.PantallaCoins;
 import Juegos.PantallaGato;
@@ -274,12 +276,11 @@ public class ThreadCliente extends Thread{
 				juegoGato(personaje);
 				break;
 			case BOMBERMARIO:
+//				juegoBomber(personaje);
 				hayJuego = false;
-				//TODO
 				break;
 			case CATCHCAT:
-				hayJuego = false;
-				//TODO
+				juegoCatch(personaje);
 				break;
 		}
 	}
@@ -581,6 +582,31 @@ public class ThreadCliente extends Thread{
 		}
 	}
 	
+//	private void juegoBomber(Personaje personaje) throws Exception{
+//		BomberMarioGUI pantalla = new BomberMarioGUI();
+//		pantalla.setVisible(true);
+//		pantalla.setTitle(nombre);
+//		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
+//		
+//		while(pantalla.isJugando()){
+//			sleep(500);
+//		}
+//		personaje.setRepetirJuego(pantalla.isPerdio());
+//		hayJuego = false;
+//	}
+	
+	private void juegoCatch(Personaje personaje) throws Exception{
+		CatchTheCatGUI pantalla = new CatchTheCatGUI();
+		pantalla.setVisible(true);
+		pantalla.setTitle(nombre);
+		pantalla.setDefaultCloseOperation(HIDE_ON_CLOSE);
+		
+		while(pantalla.isJugando()){
+			sleep(500);
+		}
+		personaje.setRepetirJuego(pantalla.isPerdio());
+		hayJuego = false;
+	}
 }
 
 	
